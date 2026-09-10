@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/SampleApi/SampleApi.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/EfCore.MultiTenancy.AspNetCore/EfCore.MultiTenancy.AspNetCore.csproj" />
+    <Project Path="src/EfCore.MultiTenancy.Core/EfCore.MultiTenancy.Core.csproj" />
+    <Project Path="src/EfCore.MultiTenancy.EfCore/EfCore.MultiTenancy.EfCore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/EfCore.MultiTenancy.IntegrationTests/EfCore.MultiTenancy.IntegrationTests.csproj" />
+    <Project Path="tests/EfCore.MultiTenancy.UnitTests/EfCore.MultiTenancy.UnitTests.csproj" />
+  </Folder>
+</Solution>
