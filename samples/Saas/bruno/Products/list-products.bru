@@ -1,0 +1,19 @@
+meta {
+  name: List Products
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{tenantUrl}}/api/products
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+docs {
+  Any authenticated actor (staff or customer) can browse the catalog.
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Customer Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{tenantUrl}}/api/auth/customers/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "bob@customer.test",
+    "password": "CustPass123"
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.token) {
+    bru.setVar("customerToken", res.body.token);
+  }
+}

@@ -1,0 +1,37 @@
+meta {
+  name: Register Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{tenantUrl}}/api/auth/customers/register
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "bob@customer.test",
+    "password": "CustPass123",
+    "name": "Bob Customer",
+    "phone": "555-1234",
+    "address": "456 Elm St"
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.token) {
+    bru.setVar("customerToken", res.body.token);
+  }
+}
+
+docs {
+  Self-service customer signup on the tenant's subdomain. Stores the returned
+  JWT in {{customerToken}}. Re-running with the same email returns 409 - use
+  "Customer Login" instead on repeat runs.
+}

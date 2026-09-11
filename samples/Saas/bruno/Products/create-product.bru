@@ -1,0 +1,42 @@
+meta {
+  name: Create Product
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{tenantUrl}}/api/products
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:json {
+  {
+    "name": "Widget",
+    "sku": "WID-1",
+    "description": "A widget",
+    "price": 9.99
+  }
+}
+
+vars:pre-request {
+  tenantUrl: http://gallant.localhost:5172
+}
+
+script:post-response {
+  if (res.body && res.body.id) {
+    bru.setVar("productId", res.body.id);
+  }
+}
+
+docs {
+  StaffOnly. Stores the new product's id in {{productId}} for the Orders requests.
+}

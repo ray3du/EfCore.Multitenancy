@@ -1,0 +1,23 @@
+docs {
+  # Saas sample walkthrough
+
+  1. Run `Companies / Signup Company` (hits the bare base domain, no tenant
+     resolved yet) to create the "acme" tenant and its admin user.
+  2. Run `Staff Auth / Staff Login` (hits the acme subdomain) - a script on this
+     request stores the returned JWT in the `staffToken` variable automatically.
+  3. Run `Customer Auth / Register Customer` (or `Customer Login` on repeat
+     runs) - stores the returned JWT in `customerToken`.
+  4. Run `Products / Create Product` as staff - stores the new id in `productId`.
+  5. Run `Orders / Create Order` as the customer (uses `productId`) - stores the
+     new id in `orderId`.
+  6. Run `Invoices / Create Invoice` as staff (uses `orderId`) - stores the new
+     id in `invoiceId`.
+
+  All tenant-scoped requests use `{{tenantUrl}}` (acme.localhost) rather than
+  `{{baseUrl}}`, since staff/customer login and every business endpoint only
+  resolve on a company's own subdomain - see Program.cs's subdomain resolution.
+
+  Re-running "Signup Company" with the same subdomain will fail (domain already
+  taken); change the `subdomain`/emails in that request's body, or edit the
+  `tenantUrl` variable, to stand up a second tenant and confirm data isolation.
+}

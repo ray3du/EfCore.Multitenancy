@@ -1,0 +1,19 @@
+meta {
+  name: Get Invoice
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{tenantUrl}}/api/invoices/{{invoiceId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+docs {
+  StaffOnly.
+}

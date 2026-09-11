@@ -1,0 +1,19 @@
+meta {
+  name: My Invoices
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{tenantUrl}}/api/invoices/mine
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{customerToken}}
+}
+
+docs {
+  CustomerOnly.
+}

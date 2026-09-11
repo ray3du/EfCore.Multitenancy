@@ -1,0 +1,21 @@
+meta {
+  name: List Orders (Staff view - all)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{tenantUrl}}/api/orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+docs {
+  Authenticated. Staff see every order in the tenant; a customer hitting this
+  same endpoint sees only their own (compare with "List Orders (Customer
+  view - mine)").
+}

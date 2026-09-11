@@ -1,0 +1,36 @@
+meta {
+  name: Signup Company
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/companies/signup
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "subdomain": "acme",
+    "companyName": "Acme Corp",
+    "address": "123 Main St",
+    "adminEmail": "admin@acme.com",
+    "adminPassword": "P@ssw0rd123",
+    "adminFullName": "Alice Admin"
+  }
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:5172
+}
+
+docs {
+  Runs against the bare base domain - no tenant is resolved yet. Creates the
+  public-schema Company row plus the tenant's admin User (Role=Admin) inside
+  the new schema.
+}

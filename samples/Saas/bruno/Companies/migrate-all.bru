@@ -1,0 +1,18 @@
+meta {
+  name: Migrate All Tenants
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/companies/migrate-all
+  body: none
+  auth: none
+}
+
+docs {
+  Applies any pending EF Core migrations (e.g. a newly added table/column) to
+  every active tenant's own schema, one at a time. Run this after adding a new
+  migration to SaasTenantDbContext so existing companies (not just new
+  signups) pick it up. Returns a per-tenant success/failure summary.
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Delete Product
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{tenantUrl}}/api/products/{{productId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+docs {
+  StaffOnly. Note: deleting a product that's referenced by an existing
+  OrderItem will fail (Restrict delete behavior) - run this against a product
+  you haven't ordered yet.
+}

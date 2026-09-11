@@ -1,0 +1,41 @@
+meta {
+  name: Create Order
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{tenantUrl}}/api/orders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{customerToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "items": [
+      {
+        "productId": "{{productId}}",
+        "quantity": 3
+      }
+    ]
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.id) {
+    bru.setVar("orderId", res.body.id);
+  }
+}
+
+docs {
+  CustomerOnly. Places an order for the authenticated customer. Stores the new
+  order's id in {{orderId}} for the Invoices requests.
+}

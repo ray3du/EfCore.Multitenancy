@@ -1,0 +1,36 @@
+meta {
+  name: Create Invoice
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{tenantUrl}}/api/invoices
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "orderIds": ["{{orderId}}"]
+  }
+}
+
+script:post-response {
+  if (res.body && res.body.id) {
+    bru.setVar("invoiceId", res.body.id);
+  }
+}
+
+docs {
+  StaffOnly. Groups one or more of a customer's not-yet-invoiced orders into a
+  new invoice. Stores the new invoice's id in {{invoiceId}}.
+}

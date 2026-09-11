@@ -1,0 +1,32 @@
+meta {
+  name: Update Product
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{tenantUrl}}/api/products/{{productId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Widget",
+    "sku": "WID-1",
+    "description": "A slightly nicer widget",
+    "price": 12.5
+  }
+}
+
+docs {
+  StaffOnly.
+}

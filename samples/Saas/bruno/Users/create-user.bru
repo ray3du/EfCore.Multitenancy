@@ -1,0 +1,36 @@
+meta {
+  name: Create User
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{tenantUrl}}/api/users
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{staffToken}}
+}
+
+body:json {
+  {
+    "email": "carol@gallant.test",
+    "password": "StaffPass123",
+    "fullName": "Carol Staff",
+    "role": "Staff"
+  }
+}
+
+vars:pre-request {
+  tenantUrl: http://gallant.localhost:5172
+}
+
+docs {
+  AdminOnly. `role` is "Admin" or "Staff".
+}

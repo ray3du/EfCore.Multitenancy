@@ -1,0 +1,19 @@
+meta {
+  name: Get My Profile
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{tenantUrl}}/api/customers/me
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{customerToken}}
+}
+
+docs {
+  CustomerOnly.
+}

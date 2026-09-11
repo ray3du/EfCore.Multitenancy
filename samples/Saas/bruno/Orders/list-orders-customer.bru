@@ -1,0 +1,20 @@
+meta {
+  name: List Orders (Customer view - mine)
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{tenantUrl}}/api/orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{customerToken}}
+}
+
+docs {
+  Same endpoint as "List Orders (Staff view - all)", but with the customer's
+  token: only that customer's own orders come back.
+}

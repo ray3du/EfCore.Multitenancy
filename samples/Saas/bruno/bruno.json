@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "EfCore.MultiTenancy Saas Sample",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Get Order
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{tenantUrl}}/api/orders/{{orderId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{customerToken}}
+}
+
+docs {
+  Authenticated; staff can fetch any order, a customer only their own (403
+  otherwise).
+}

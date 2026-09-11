@@ -1,0 +1,37 @@
+meta {
+  name: Staff Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{tenantUrl}}/api/auth/staff/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "gallant@example.com",
+    "password": "P@ssw0rd123"
+  }
+}
+
+vars:pre-request {
+  tenantUrl: http://gallant.localhost:5172
+}
+
+script:post-response {
+  if (res.body && res.body.token) {
+    bru.setVar("staffToken", res.body.token);
+  }
+}
+
+docs {
+  Logs in on the tenant's own subdomain. Stores the returned JWT in
+  {{staffToken}}, used by every StaffOnly/AdminOnly request below.
+}
