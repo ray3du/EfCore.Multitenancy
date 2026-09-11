@@ -42,15 +42,17 @@ dotnet run
 ```
 
 Then create a tenant and hit its endpoint, as shown in the main
-[README](README.md#running-the-sample). Useful as a manual sanity check after any
+[README](README.md#try-it-in-60-seconds). Useful as a manual sanity check after any
 change to resolution, provisioning, or the interceptor: create two tenants, write
 data to one, and confirm the other still can't see it.
 
 ## Building the packages locally
 
-The packages aren't published to NuGet yet. Until they are, if you need a `.nupkg`
-to test against a separate consuming project (rather than a `ProjectReference`),
-pack them locally:
+Released versions are on NuGet (see the [README](README.md#install)). If you need
+a `.nupkg` of an unreleased change to test against a separate consuming project
+(rather than a `ProjectReference`), pack them locally — bump `Version` in
+[`Directory.Build.props`](Directory.Build.props) first so it doesn't collide with
+a published version:
 
 ```bash
 dotnet pack src/EfCore.MultiTenancy.Core -c Release

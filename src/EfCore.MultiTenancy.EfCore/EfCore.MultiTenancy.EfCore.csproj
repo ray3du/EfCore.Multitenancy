@@ -17,6 +17,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>EF Core layer for EfCore.MultiTenancy: TenantDbContext, the search_path connection interceptor, schema provisioning and migration, for PostgreSQL. Install this alone only for a non-ASP.NET Core app (a console tool or background worker) - for an ASP.NET Core app, install EfCore.MultiTenancy.AspNetCore instead, which brings this in automatically along with tenant resolution middleware and DI wiring.</Description>
   </PropertyGroup>
 
 </Project>

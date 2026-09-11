@@ -1,16 +1,24 @@
 <Project>
 
   <PropertyGroup>
+    <Version>0.1.2</Version>
     <LangVersion>latest</LangVersion>
     <Authors>EfCore.MultiTenancy contributors</Authors>
-    <PackageProjectUrl>https://github.com/example/EfCore.MultiTenancy</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/example/EfCore.MultiTenancy</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ray3du/EfCore.Multitenancy</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ray3du/EfCore.Multitenancy</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>multitenancy;multi-tenant;postgresql;postgres;efcore;entity-framework;schema;aspnetcore</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- $(MSBuildThisFileDirectory) is the repo root (where this file lives), so this
+         resolves correctly no matter which project under src/ imports it. -->
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
 
 </Project>

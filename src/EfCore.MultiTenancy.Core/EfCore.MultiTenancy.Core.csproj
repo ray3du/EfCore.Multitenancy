@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Core abstractions for EfCore.MultiTenancy (Tenant, ITenantContext, lifecycle events) with no EF Core or ASP.NET Core dependency. Building an ASP.NET Core app? Install EfCore.MultiTenancy.AspNetCore instead - it brings this package in automatically.</Description>
   </PropertyGroup>
 
   <ItemGroup>

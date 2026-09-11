@@ -5,9 +5,44 @@ Schema-based multi-tenancy for PostgreSQL + EF Core, in the spirit of Python's
 database, one schema per tenant, a shared `public` schema for the tenant registry,
 and automatic routing of each request to the right schema.
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how it works internally,
+**Requirements**: .NET 8 SDK, PostgreSQL 12+ (Docker is the easiest way to get one
+for the steps below).
+
+See [`docs/ARCHITECTURE.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/docs/ARCHITECTURE.md) for how it works internally,
 including three real isolation bugs found and fixed while building this. Worth
 reading before you extend the isolation-critical path.
+
+## Try it in 60 seconds
+
+The fastest way to see schema-per-tenant isolation actually working, before
+wiring the library into your own app, is the included sample: it runs
+standalone from a clone via project references, no NuGet install required for
+this part.
+
+```bash
+git clone https://github.com/ray3du/EfCore.Multitenancy.git && cd EfCore.Multitenancy/samples/SampleApi
+docker compose up -d                                       # Postgres on localhost:5433
+dotnet ef database update --context 'TenantStoreDbContext`1' # migrates the public/registry schema
+dotnet run
+```
+
+In another terminal, create a tenant (this `CREATE SCHEMA`s `acme` and migrates it)
+and then hit an endpoint through its subdomain:
+
+```bash
+curl -X POST http://localhost:5299/api/tenants \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Acme Corp","domain":"acme"}'
+
+curl http://localhost:5299/api/todos -H "Host: acme.localhost"
+# {"tenant":"Acme Corp","todos":[{"id":"...","title":"Welcome to Acme Corp!", ...}]}
+```
+
+Create a second tenant with a different `domain` and repeat the last `curl` with
+its own `Host` header; its `todos` list is independently empty. That mutual
+isolation from one shared database is the entire point of this library. Full
+source for what you just ran is in [`samples/SampleApi`](https://github.com/ray3du/EfCore.Multitenancy/tree/main/samples/SampleApi):
+one `Program.cs`, one `DbContext`, two controllers.
 
 ## Packages
 
@@ -19,31 +54,28 @@ reading before you extend the isolation-critical path.
 
 ## Install
 
-Requires .NET 8 and PostgreSQL 12+.
-
-Once published to NuGet, install the package(s) you need. Most apps only need
-`AspNetCore` directly, since it pulls in `EfCore` and `Core` transitively:
-
 ```bash
 dotnet add package EfCore.MultiTenancy.AspNetCore
 ```
 
-Or, if you only need the EF Core layer without ASP.NET Core (a console tool or a
-background worker):
+Most apps only need `AspNetCore` directly, since it pulls in `EfCore` and `Core`
+transitively. If you only need the EF Core layer without ASP.NET Core (a console
+tool or a background worker), depend on `EfCore.MultiTenancy.EfCore` alone.
 
-```bash
-dotnet add package EfCore.MultiTenancy.EfCore
-```
-
-Equivalent `PackageReference` entries in a `.csproj`:
+Working from a clone instead (e.g. to try an unreleased change)? Reference the
+project directly, or pack the three library projects locally and add the output
+folder as a NuGet source; see
+[`CONTRIBUTING.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/CONTRIBUTING.md#building-the-packages-locally):
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="EfCore.MultiTenancy.AspNetCore" Version="1.0.0" />
+  <ProjectReference Include="..\EfCore.MultiTenancy\src\EfCore.MultiTenancy.AspNetCore\EfCore.MultiTenancy.AspNetCore.csproj" />
 </ItemGroup>
 ```
 
 ## Quick start
+
+Integrating into your own app takes four steps.
 
 ### 1. Define your tenant type (optional) and tenant-scoped `DbContext`
 
@@ -156,9 +188,9 @@ dotnet ef migrations add InitialCreate --context 'TenantStoreDbContext`1' -o Mig
 
 You'll need an `IDesignTimeDbContextFactory<T>` for both contexts (EF's CLI tooling
 builds your app's host to discover `DbContext` types, and no tenant is ever resolved
-outside a request; see `SampleApi/Data/*Factory.cs` for the pattern, and
-`docs/ARCHITECTURE.md` for why `AddTenantDbContext` also guards this at runtime via
-`EF.IsDesignTime`).
+outside a request; see [`SampleApi/Data/*Factory.cs`](https://github.com/ray3du/EfCore.Multitenancy/tree/main/samples/SampleApi/Data)
+for the pattern, and [`docs/ARCHITECTURE.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/docs/ARCHITECTURE.md)
+for why `AddTenantDbContext` also guards this at runtime via `EF.IsDesignTime`).
 
 Apply migrations to every active tenant in one call:
 
@@ -181,25 +213,6 @@ var summary = await migrator.MigrateAllTenantsAsync(); // ITenantMigrator<TTenan
   `ITenantScopeFactory<TTenant>.CreateScope(tenant)` to get a properly tenant-bound
   DI scope before resolving anything tenant-scoped.
 
-## Running the sample
-
-```bash
-cd samples/SampleApi
-docker compose up -d          # Postgres on localhost:5433
-dotnet ef database update --context 'TenantStoreDbContext`1'
-dotnet run
-```
-
-Then:
-
-```bash
-curl -X POST http://localhost:5299/api/tenants \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Acme Corp","domain":"acme"}'
-
-curl http://localhost:5299/api/todos -H "Host: acme.localhost"
-```
-
 ## Tests
 
 ```bash
@@ -209,7 +222,7 @@ dotnet test tests/EfCore.MultiTenancy.IntegrationTests    # real Postgres via Te
 
 ## Limitations
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#limitations-vs-django-tenants)
+See [`docs/ARCHITECTURE.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/docs/ARCHITECTURE.md#limitations-vs-django-tenants)
 for the full list. In short: no built-in admin UI, no path-segment resolution
 strategy out of the box (though the extension point supports adding one),
 `DatabasePerTenant` mode is less exercised than the primary `SchemaPerTenant` mode,
@@ -217,5 +230,5 @@ and there's no built-in tenant-aware background job integration.
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for local dev setup, how to build and pack
+See [`CONTRIBUTING.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/CONTRIBUTING.md) for local dev setup, how to build and pack
 the packages locally, and what to check before opening a PR.
