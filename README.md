@@ -199,6 +199,21 @@ var summary = await migrator.MigrateAllTenantsAsync(); // ITenantMigrator<TTenan
 // summary.AllSucceeded, summary.Results (per-tenant success/failure)
 ```
 
+## Tenant administration
+
+Tenant administration commands are available from the command line the moment you
+install this library, with nothing to add to `Program.cs`:
+
+- `create_tenant`: creates one or more tenants.
+- `list_tenants`: lists tenants (pass `--all` to include inactive ones).
+- `delete_tenant`: deletes one or more tenants, identified by schema name, id, or domain.
+
+```bash
+dotnet run -- create_tenant --tenant "Acme Corp|acme" --tenant "Globex|globex"
+dotnet run -- list_tenants [--all]
+dotnet run -- delete_tenant --schema acme_corp --id <guid> --domain globex [--force] [--keep-schema]
+```
+
 ## Correctness notes (read before deploying)
 
 - Register your `TenantDbContext<T>` subclass with `AddDbContext`, never
@@ -223,8 +238,9 @@ dotnet test tests/EfCore.MultiTenancy.IntegrationTests    # real Postgres via Te
 ## Limitations
 
 See [`docs/ARCHITECTURE.md`](https://github.com/ray3du/EfCore.Multitenancy/blob/main/docs/ARCHITECTURE.md#limitations-vs-django-tenants)
-for the full list. In short: no built-in admin UI, no path-segment resolution
-strategy out of the box (though the extension point supports adding one),
+for the full list. In short: no built-in admin UI (though `TenantAdministrationCommand<T>`
+covers create/delete/list from the command line; see "Tenant administration" above),
+no path-segment resolution strategy out of the box (though the extension point supports adding one),
 `DatabasePerTenant` mode is less exercised than the primary `SchemaPerTenant` mode,
 and there's no built-in tenant-aware background job integration.
 
